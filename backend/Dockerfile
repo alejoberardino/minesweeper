@@ -4,7 +4,8 @@ WORKDIR /go/src/minesweeper
 
 COPY . .
 
-RUN ./scripts/setup.sh
+# TODO: This is not optmized, at all
+RUN ./scripts/setup.sh 
 
-CMD ["minesweeper"]
+CMD ["gin", "minesweeper"]
 
