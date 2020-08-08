@@ -14,3 +14,7 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 - Basic UI to visualize the game board and interact with the backend
 - User auth workflow
 - Testing (normally this'd be much higher up the list, but this is a prototype)
+
+## Random comments
+
+- The Go syntax is very weird, nothing like I've ever used before, BUT, its conventions are very strongly enforced (e.g. uppercase field access, unused imports)
