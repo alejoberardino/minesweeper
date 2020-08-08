@@ -12,10 +12,11 @@ func main() {
 	// Create new Gin REST API
 	r := gin.New()
 
+	// Declarative swagger info
 	docs.SwaggerInfo.Title = "MinesweeperAPI"
 	docs.SwaggerInfo.Description = "This is a test project implementing a Minesweeper game, using a REST API built with Go"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "petstore.swagger.io"
+	docs.SwaggerInfo.Host = "petstore.swagger.io" // TODO: Replace
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
