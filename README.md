@@ -5,7 +5,7 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 
 ## Short term plans
 
-- Template Go API project, with a featured framework that includes auto generating docs (Swagger, or Swagger like)
+- Done ✔ ~~Template Go API project, with a featured framework that includes auto generating docs (Swagger, or Swagger like)~~
 - Template Vue project
 - Deploy to AWS
 - Setup pipelines (might do with github actions instead of aws pipelines, easier to setup)
