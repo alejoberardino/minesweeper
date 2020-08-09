@@ -1,18 +1,35 @@
 version: "3"
 
 services:
-    minesweeper-api:
+    api:
         build: ./backend
         container_name: minesweeper-api
         ports:
-            - 3000:3000
+            - "3000:$API_PORT"
         volumes:
             - ./backend:/go/src/minesweeper
+        env_file:
+            - .env
 
-    minesweeper-client:
+    client:
         build: ./frontend
         container_name: minesweeper-client
         ports:
-            - 8080:8080
+            - "8080:$CLIENT_PORT"
         volumes:
             - ./frontend:/usr/src/app
+        env_file:
+            - .env
+
+    db:
+        container_name: minesweeper-mongo
+        image: mongo
+        ports: 
+            - 27017-27019:27017-27019
+        environment:
+            MONGO_INITDB_DATABASE: $MONGO_DATABASE
+            MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
+            MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
+        volumes:
+            # - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+            - ./mongo:/data/db

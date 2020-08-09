@@ -6,7 +6,7 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 ## Short term plans
 
 - Done ✔ ~~Template Go API project, with a featured framework that includes auto generating docs (Swagger, or Swagger like)~~
-- Template Vue project
+- Done ✔ ~~Template Vue project~~
 - Basic API endpoints to create game (store game matrix in db)
 - Basic API endpoints to play the game
 - Basic UI to visualize the game board and interact with the backend
@@ -18,3 +18,4 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 ## Random comments
 
 - The Go syntax is very weird, nothing like I've ever used before, BUT, its conventions are very strongly enforced (e.g. uppercase field access, unused imports)
+- This seems like a project well suited for a NoSQL db, at least for a quick prototype
