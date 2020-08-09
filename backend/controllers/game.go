@@ -1,18 +1,19 @@
-package routes
+package controllers
 
 import (
 	"log"
 	"net/http"
-	"os"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/alejoberardino/minesweeper/model"
-	"github.com/alejoberardino/minesweeper/utils"
+	"github.com/alejoberardino/minesweeper/services"
 	"github.com/gin-gonic/gin"
 )
+
+type GameController struct {
+	GameService *services.GameService
+}
 
 type CreateGameRequestDTO struct {
 	Rows    int `json:"rows" example:"10"`
@@ -31,7 +32,7 @@ type CreateGameResponseDTO struct {
 // @Param dto body CreateGameRequestDTO true "Details for the new game"
 // @Success 200 {object} CreateGameResponseDTO
 // @Router /games/ [post]
-func CreateGame(c *gin.Context) {
+func (controller *GameController) Create(c *gin.Context) {
 	var dto CreateGameRequestDTO
 
 	// Parse dto
@@ -41,16 +42,8 @@ func CreateGame(c *gin.Context) {
 		return
 	}
 
-	game := model.BuildGame(dto.Rows, dto.Columns, dto.Mines)
-	log.Printf("Built game %v", game)
-
-	// Connect to mongo
-	client, ctx, cancel := utils.GetConnection()
-	defer cancel()
-	defer client.Disconnect(ctx)
-
-	// Insert to database
-	result, err := client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").InsertOne(ctx, game)
+	// Create game
+	id, err := controller.GameService.Create(dto.Rows, dto.Columns, dto.Mines)
 	if err != nil {
 		log.Printf("Could not create game: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
@@ -59,7 +52,7 @@ func CreateGame(c *gin.Context) {
 
 	// Return the id of the new game
 	c.JSON(200, gin.H{
-		"id": result.InsertedID,
+		"id": id,
 	})
 }
 
@@ -85,7 +78,7 @@ type GetGameResponseDTO struct {
 // @Param id path string true "Id of the game to get"
 // @Success 200 {object} GetGameResponseDTO
 // @Router /games/{id} [get]
-func GetGame(c *gin.Context) {
+func (controller *GameController) Get(c *gin.Context) {
 	id := c.Param("id")
 
 	// if id == nil {
@@ -99,24 +92,16 @@ func GetGame(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "The provided id was invalid"})
 	}
 
-	log.Printf("Object id: %v", objectId)
-
-	var game GetGameResponseDTO
-
-	// Connect to mongo
-	client, ctx, cancel := utils.GetConnection()
-	defer cancel()
-	defer client.Disconnect(ctx)
-
-	// Get from the database
-	err = client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").FindOne(ctx, bson.M{"_id": objectId}).Decode(&game)
-	if err != nil || game.Id == primitive.NilObjectID {
+	log.Printf("Got Object id: %v", objectId)
+	game, err := controller.GameService.Get(objectId)
+	if err != nil {
+		log.Printf("There was an error: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "There was an error"})
+	} else if game.Id == primitive.NilObjectID {
 		log.Printf("Could not find game with id %s", id)
-		c.JSON(http.StatusNotFound, gin.H{"msg": "Could not find game"})
-		return
+		c.JSON(http.StatusNotFound, gin.H{"msg": "Could not find game with provided ID"})
+	} else {
+		log.Printf("Found Game: %v", game)
+		c.JSON(200, game)
 	}
-	log.Printf("Game: %v", game)
-
-	// Return the id of the new game
-	c.JSON(200, game)
 }
