@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -31,7 +30,7 @@ func GetConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 		log.Printf("Failed to create client: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
+	ctx, cancel := context.WithCancel(context.Background())
 
 	err = client.Connect(ctx)
 	if err != nil {
