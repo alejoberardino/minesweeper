@@ -5,15 +5,16 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 
 ## Short term plans
 
-- Done ✔ ~~Template Go API project, with a featured framework that includes auto generating docs (Swagger, or Swagger like)~~
-- Done ✔ ~~Template Vue project~~
-- Basic API endpoints to create game (store game matrix in db)
+- ✔ ~~Template Go API project, with a featured framework that includes auto generating docs (Swagger, or Swagger like)~~
+- ✔ ~~Template Vue project~~
+- ✔ ~~Basic API endpoints to create game (store game matrix in db)~~
 - Basic API endpoints to play the game
 - Basic UI to visualize the game board and interact with the backend
 - User auth workflow
-- Testing (normally this'd be much higher up the list, but this is a prototype)
 - Deploy to AWS
 - Setup pipelines (might do with github actions instead of aws pipelines, easier to setup)
+- DTO Validation
+- Testing (normally this'd be much higher up the list, but this is a prototype)
 
 ## Random comments
 
