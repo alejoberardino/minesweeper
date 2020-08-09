@@ -1,7 +1,7 @@
 <template>
   <div class="container" :style="calculateMatrixStyle()">
     <template v-for="(rows, i) in matrix">
-      <Cell v-for="(state, j) in rows" :key="`${i};${j}`" :style="calculateCellStyle(i, j)" />
+      <Cell v-for="(state, j) in rows" :key="`${i};${j}`" :style="calculateCellStyle(i, j)" :state="state" />
     </template>
   </div>
 </template>
@@ -10,6 +10,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import Cell from '@/components/Cell.vue'
 import { State } from '@/utils/state'
+import { gameService } from '@/services/game'
 
 @Component({
   components: {
@@ -17,7 +18,14 @@ import { State } from '@/utils/state'
   },
 })
 export default class GameMatrix extends Vue {
-  @Prop() private matrix!: State[][]
+  private id!: number
+  private matrix!: State[][]
+
+  created() {
+    if (!this.id) {
+      this.matrix = gameService.create()
+    }
+  }
 
   calculateMatrixStyle() {
     return {

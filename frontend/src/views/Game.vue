@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <GameMatrix :matrix="matrix" />
+    <GameMatrix :id="id" />
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import GameMatrix from '@/components/GameMatrix.vue'
 import { Matrix } from '@/utils/state'
+import { gameService } from '@/services/game'
 
 @Component({
   components: {
@@ -15,12 +16,6 @@ import { Matrix } from '@/utils/state'
   },
 })
 export default class Game extends Vue {
-  private matrix: Matrix = [
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-  ]
+  id = null
 }
 </script>
