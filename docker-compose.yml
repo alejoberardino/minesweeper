@@ -8,3 +8,11 @@ services:
             - 3000:3000
         volumes:
             - ./backend:/go/src/minesweeper
+
+    minesweeper-client:
+        build: ./frontend
+        container_name: minesweeper-client
+        ports:
+            - 8080:8080
+        volumes:
+            - ./frontend:/usr/src/app
