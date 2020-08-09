@@ -18,6 +18,7 @@ func main() {
 	// Games
 	games := r.Group("/games")
 	{
+		games.GET("/:id", routes.GetGame)
 		games.POST("/", routes.CreateGame)
 	}
 

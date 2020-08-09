@@ -6,38 +6,42 @@ import (
 	"time"
 
 	"github.com/alejoberardino/minesweeper/utils"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
-	BLANK   = 0
-	UNKNOWN = -1
-	FLAGGED = -2
-	MINE    = -3
+	CLICKED  = 1
+	UNKNOWN  = 0
+	POSSIBLE = -1
+	FLAGGED  = -2
+	MINE     = -1
 )
 
 type Cell struct {
-	State   int
-	Clicked bool
+	Value int
+	State int
 }
 
 type Game struct {
-	Rows       int
-	Columns    int
-	Mines      int
-	State      string
-	Started_at time.Time
-	Cells      [][]Cell // Could have also stored it as a simple array, this is nicer (maybe)
+	Id        primitive.ObjectID `bson:"_id"`
+	Rows      int                `bson:"rows"`
+	Columns   int                `bson:"columns"`
+	Mines     int                `bson:"mines"`
+	Value     string             `bson:"value"`
+	StartedAt time.Time          `bson:"started_at"`
+	Cells     [][]Cell           `bson:"cells"` // Could have also stored it as a simple array, this is nicer (maybe)
 }
 
 func BuildGame(rows int, columns int, mines int) Game {
 	log.Printf("Creating game with %d rows, %d columns and %d mines", rows, columns, mines)
 	var game Game = Game{
-		Rows:       rows,
-		Columns:    columns,
-		Mines:      mines,
-		State:      "new",
-		Started_at: time.Now(),
-		Cells:      make([][]Cell, rows),
+		Id:        primitive.NewObjectID(),
+		Rows:      rows,
+		Columns:   columns,
+		Mines:     mines,
+		Value:     "new",
+		StartedAt: time.Now(),
+		Cells:     make([][]Cell, rows),
 	}
 
 	log.Print("Initializing board")     // (there should be a cleaner way, no?)
@@ -46,8 +50,8 @@ func BuildGame(rows int, columns int, mines int) Game {
 		game.Cells[y], cells = cells[:columns], cells[columns:]
 		for x := range game.Cells[y] {
 			game.Cells[y][x] = Cell{
-				State:   0,
-				Clicked: false,
+				Value: 0,
+				State: 0,
 			}
 		}
 	}
@@ -60,13 +64,13 @@ func BuildGame(rows int, columns int, mines int) Game {
 		}
 		log.Printf("Adding mine no. %d", i)
 		y := rand.Intn(rows)
-		x := rand.Intn(rows)
+		x := rand.Intn(columns)
 
-		if game.Cells[y][x].State != MINE {
+		if game.Cells[y][x].Value != MINE {
 			log.Printf("Added mine at (%d;%d)", x, y)
-			game.Cells[y][x].State = MINE
+			game.Cells[y][x].Value = MINE
 		} else {
-			log.Printf("(%d;%d) was already a mine (%d). Retrying...", x, y, game.Cells[y][x].State)
+			log.Printf("(%d;%d) was already a mine (%d). Retrying...", x, y, game.Cells[y][x].Value)
 			i-- // Retry
 		}
 		counter++
@@ -75,7 +79,7 @@ func BuildGame(rows int, columns int, mines int) Game {
 	log.Print("Calculating mine-adjacent scores")
 	for y := range game.Cells {
 		for x := range game.Cells[y] {
-			if game.Cells[y][x].State == MINE {
+			if game.Cells[y][x].Value == MINE {
 				game.calculateAdjacentScores(x, y)
 			}
 		}
@@ -99,7 +103,7 @@ func (game *Game) calculateAdjacentScores(x int, y int) {
 			}
 
 			log.Printf("Increasing score for (%d;%d)", j, i)
-			game.Cells[i][j].State++
+			game.Cells[i][j].Value++
 		}
 	}
 }

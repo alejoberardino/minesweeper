@@ -19,3 +19,4 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 
 - The Go syntax is very weird, nothing like I've ever used before, BUT, its conventions are very strongly enforced (e.g. uppercase field access, unused imports)
 - This seems like a project well suited for a NoSQL db, at least for a quick prototype
+- Since there's no generics, decorators, or any sort of metaprogramming, ORMs and Swagger seem to rely on comments, which are very unsafe and many times left outdated
