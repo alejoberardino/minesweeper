@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/alejoberardino/minesweeper/model"
 	"github.com/alejoberardino/minesweeper/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -32,18 +33,21 @@ func CreateGame(c *gin.Context) {
 		return
 	}
 
+	game := model.BuildGame(dto.Rows, dto.Columns, dto.Mines)
+	log.Printf("Built game %v", game)
+
 	// Connect to mongo
 	client, ctx, cancel := utils.GetConnection()
 	defer cancel()
 	defer client.Disconnect(ctx)
 
 	// Insert to database
-	result, err := client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").InsertOne(ctx, dto)
+	_, err := client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").InsertOne(ctx, dto)
 	if err != nil {
 		log.Printf("Could not create game: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
 
-	c.JSON(200, result)
+	c.JSON(200, game)
 }
