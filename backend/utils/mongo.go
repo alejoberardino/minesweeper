@@ -30,6 +30,7 @@ func GetConnection() (*mongo.Client, context.Context, context.CancelFunc) {
 		log.Printf("Failed to create client: %v", err)
 	}
 
+	// We want the connection for this service to live forever in the background
 	ctx, cancel := context.WithCancel(context.Background())
 
 	err = client.Connect(ctx)
