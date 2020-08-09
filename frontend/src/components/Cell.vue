@@ -1,25 +1,26 @@
 <template>
   <div class="cell">
-    <img v-if="state === SpecialStates.FLAGGED" src="@/assets/flag-24px.svg" />
-    <img v-if="state === SpecialStates.UNKNOWN" src="@/assets/help-24px.svg" />
+    <img v-if="state === State.FLAGGED" src="@/assets/flag-24px.svg" />
+    <img v-if="state === State.UNKNOWN" src="@/assets/help-24px.svg" />
     {{ state > 0 ? state : '' }}
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { State, SpecialStates } from '../utils/state'
+import { State } from '../utils/state'
 
 @Component
 export default class Cell extends Vue {
-  @Prop() private state!: State | number
-  SpecialStates = SpecialStates
+  @Prop() private state!: State
+  @Prop() private value!: number
+  State = State
 
   get imageSrc() {
     switch (this.state) {
-      case SpecialStates.UNKNOWN:
+      case State.UNKNOWN:
         return 'help'
-      case SpecialStates.FLAGGED:
+      case State.FLAGGED:
         return 'flag'
       default:
         return null

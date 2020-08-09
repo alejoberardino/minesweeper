@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const http = axios.create({
-  baseURL: 'localhost:8080/',
+  baseURL: process.env.VUE_APP_API_BASE_URL,
 })
 
 export abstract class BaseService {

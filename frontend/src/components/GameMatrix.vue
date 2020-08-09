@@ -18,16 +18,17 @@ import { gameService } from '@/services/game'
   },
 })
 export default class GameMatrix extends Vue {
-  private id!: number
-  private matrix!: State[][]
+  @Prop() private id!: number
+  @Prop() private matrix!: State[][]
 
   created() {
     if (!this.id) {
-      this.matrix = gameService.create()
+      // this.matrix = gameService.create()
     }
   }
 
   calculateMatrixStyle() {
+    console.log(this.matrix)
     return {
       'grid-template-rows': `repeat(${this.matrix.length}, 5vw)`,
       'grid-template-columns': `repeat(${this.matrix[0].length}, 5vw)`,

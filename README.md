@@ -15,6 +15,7 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 - Setup pipelines (might do with github actions instead of aws pipelines, easier to setup)
 - DTO Validation
 - Testing (normally this'd be much higher up the list, but this is a prototype)
+- Nice FE error handling
 
 ## Random comments
 

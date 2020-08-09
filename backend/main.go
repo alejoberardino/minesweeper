@@ -8,6 +8,7 @@ import (
 	"github.com/alejoberardino/minesweeper/docs"
 	"github.com/alejoberardino/minesweeper/services"
 	"github.com/alejoberardino/minesweeper/utils"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"   // gin-swagger middleware
 	"github.com/swaggo/gin-swagger/swaggerFiles" // swagger embed files
@@ -16,6 +17,9 @@ import (
 func main() {
 	// Create new Gin REST API
 	r := gin.Default()
+
+	// Configure CORS
+	r.Use(cors.Default())
 
 	// Connect to mongo
 	client, ctx, cancel := utils.GetConnection()
@@ -46,5 +50,6 @@ func main() {
 	// Run swagger docs
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// Run the api
 	r.Run()
 }

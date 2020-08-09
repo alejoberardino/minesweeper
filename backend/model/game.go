@@ -18,8 +18,8 @@ const (
 )
 
 type Cell struct {
-	Value int
-	State int
+	Value int `json:"value" bson:"value"`
+	State int `json:"state" bson:"state"`
 }
 
 type Game struct {

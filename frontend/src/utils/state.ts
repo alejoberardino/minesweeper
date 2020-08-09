@@ -1,8 +1,23 @@
-export enum SpecialStates {
-  BLANK = 0,
-  UNKNOWN = -1,
+export enum State {
+  CLICKED = 1,
+  UNKNOWN = 0,
+  POSSIBLE = -1,
   FLAGGED = -2,
-  BOMB = -3,
+  MINE = -1,
 }
-export type State = SpecialStates | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-export type Matrix = State[][]
+
+export interface Cell {
+  state: State
+  value: number
+}
+export type Matrix = Cell[][]
+
+export interface Game {
+  id: number | null
+  cells: Matrix
+  columns: number
+  rows: number
+  mines: number
+  startedAt: Date | null
+  value: string | null
+}

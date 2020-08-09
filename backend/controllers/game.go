@@ -7,6 +7,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
+	"github.com/alejoberardino/minesweeper/model"
 	"github.com/alejoberardino/minesweeper/services"
 	"github.com/gin-gonic/gin"
 )
@@ -56,11 +57,6 @@ func (controller *GameController) Create(c *gin.Context) {
 	})
 }
 
-type NestedCellDTO struct {
-	Value int `json:"value" bson:"value"`
-	State int `json:"state" bson:"state"`
-}
-
 type GetGameResponseDTO struct {
 	Id        primitive.ObjectID `json:"id" bson:"_id"`
 	Rows      int                `json:"rows" bson:"rows"`
@@ -68,7 +64,7 @@ type GetGameResponseDTO struct {
 	Mines     int                `json:"mines" bson:"mines"`
 	Value     string             `json:"value" bson:"value"`
 	StartedAt time.Time          `json:"startedAt" bson:"started_at"`
-	Cells     [][]NestedCellDTO  `json:"cells" bson:"cells"`
+	Cells     [][]model.Cell     `json:"cells" bson:"cells"`
 }
 
 // Get game godoc
@@ -81,6 +77,7 @@ type GetGameResponseDTO struct {
 func (controller *GameController) Get(c *gin.Context) {
 	id := c.Param("id")
 
+	// TODO: Come back to this
 	// if id == nil {
 	// 	log.Print("Id was not present in the request")
 	// 	c.JSON(http.StatusBadRequest, gin.H{"msg": "Id was not present in the request"})
@@ -102,6 +99,14 @@ func (controller *GameController) Get(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "Could not find game with provided ID"})
 	} else {
 		log.Printf("Found Game: %v", game)
-		c.JSON(200, game)
+		log.Print("Hiding unclicked values from the user")
+		for i := range game.Cells {
+			for j := range game.Cells[i] {
+				if game.Cells[i][j].State != model.CLICKED {
+					game.Cells[i][j].Value = 0
+				}
+			}
+		}
+		c.JSON(200, GetGameResponseDTO(game))
 	}
 }
