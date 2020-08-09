@@ -109,14 +109,12 @@ func GetGame(c *gin.Context) {
 	defer client.Disconnect(ctx)
 
 	// Get from the database
-	result := client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").FindOne(ctx, bson.M{"_id": objectId})
-	if result == nil {
+	err = client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").FindOne(ctx, bson.M{"_id": objectId}).Decode(&game)
+	if err != nil || game.Id == primitive.NilObjectID {
 		log.Printf("Could not find game with id %s", id)
 		c.JSON(http.StatusNotFound, gin.H{"msg": "Could not find game"})
 		return
 	}
-	result.Decode(&game)
-	log.Printf("Result: %v", result)
 	log.Printf("Game: %v", game)
 
 	// Return the id of the new game
