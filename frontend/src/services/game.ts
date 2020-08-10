@@ -1,5 +1,6 @@
 import http, { BaseService } from './base'
 import { Matrix, State, Cell } from '@/utils/state'
+import { Game } from '@/utils/state'
 
 export const gameService = new (class GameService extends BaseService {
   path = '/games/'
@@ -9,11 +10,11 @@ export const gameService = new (class GameService extends BaseService {
     return response.id
   }
 
-  async get(id: string) {
+  async get(id: string): Promise<Game> {
     return (await http.get(this.path + id)).data
   }
 
-  async click(id: string, x: number, y: number, state: State): Promise<Cell> {
+  async click(id: string, x: number, y: number, state: State): Promise<Game> {
     return (
       await http.post(this.path + id + '/click', {
         x,

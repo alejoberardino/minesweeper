@@ -39,13 +39,12 @@ func (service *GameService) Get(id primitive.ObjectID) (model.Game, error) {
 	return game, err
 }
 
-func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int) (model.Cell, error) {
-	var cell model.Cell
+func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int) (model.Game, error) {
 	// TODO: This is very inefficient, but mongo deep queries require aggregation & projections,
 	// and the mongo-go-driver isn't super documented. I'll leave it for later.
 	game, err := service.Get(id)
 	if err != nil || game.Id == primitive.NilObjectID {
-		return cell, err
+		return game, err
 	}
 	log.Printf("Got game, cell: %v", game.Cells[y][x])
 
@@ -62,9 +61,9 @@ func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int
 			},
 		},
 	}); err != nil || result.ModifiedCount > 1 {
-		return cell, err
+		return game, err
 	}
 
 	log.Print("Update successful")
-	return game.Cells[y][x], err
+	return game, err
 }

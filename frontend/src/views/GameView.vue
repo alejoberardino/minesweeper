@@ -8,7 +8,6 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import GameMatrix from '@/components/GameMatrix.vue'
 import { Matrix, Game, State } from '@/utils/state'
-import { MIN_STATE } from '@/utils/state'
 import { gameService } from '@/services/game'
 
 @Component({
@@ -39,12 +38,12 @@ export default class GameView extends Vue {
       return
     }
     // Assume always left click
-    const updatedCell = await gameService.click(this.game.id!, x, y, state)
-    if (updatedCell.state !== state) {
-      throw new Error(`Mismatched states, wanted ${state} got ${updatedCell.state}`)
+    const updatedGame = await gameService.click(this.game.id!, x, y, state)
+    if (updatedGame.cells[y][x].state !== state) {
+      throw new Error(`Mismatched states, wanted ${state} got ${updatedGame.cells[y][x].state}`)
     }
 
-    this.$set(this.game.cells[y], x, updatedCell)
+    this.game = updatedGame
   }
 
   cellRightClicked({ x, y }: { x: number; y: number }) {

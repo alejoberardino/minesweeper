@@ -23,3 +23,4 @@ I'll be setting myself a deadline: to complete this over the weekend, with whate
 - This seems like a project well suited for a NoSQL db, at least for a quick prototype
 - Since there's no generics, decorators, or any sort of metaprogramming, ORMs and Swagger seem to rely on comments, which are very unsafe and many times left outdated
 - This reminds me a lot of C, specifically the fact that since the syntax is not too complex yet programs can have a lot of freedom, it leaves that freedom to the developer to structure code as they see fit. That's very cool, but also it makes me unsure of what's the best approach to take
+- Clicks (i.e. state changes) return the whole board. This could be much more optimized, but because clicking can change the game state, or more than one cell, this was the fast approach to an MVP

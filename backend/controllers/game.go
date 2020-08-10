@@ -123,7 +123,7 @@ type ClickGameCellRequestDTO struct {
 // @Produce  json
 // @Param id path string true "Id of the game to work with"
 // @Param dto body ClickGameCellRequestDTO true "Which cell was clicked, and to what state"
-// @Success 200 {object} model.Cell
+// @Success 200 {object} model.GetGameResponseDTO
 // @Router /games/{id}/click [post]
 func (controller *GameController) Click(c *gin.Context) {
 	var dto ClickGameCellRequestDTO
@@ -150,16 +150,21 @@ func (controller *GameController) Click(c *gin.Context) {
 		return
 	}
 
-	cell, err := controller.GameService.Click(objectId, dto.X, dto.Y, dto.State)
+	game, err := controller.GameService.Click(objectId, dto.X, dto.Y, dto.State)
 	if err != nil {
 		log.Printf("Could not create game: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
 		return
 	}
 
-	if dto.State != model.CLICKED {
-		cell.Value = model.UNKNOWN
+	log.Print("Hiding unclicked values from the user")
+	for i := range game.Cells {
+		for j := range game.Cells[i] {
+			if game.Cells[i][j].State != model.CLICKED {
+				game.Cells[i][j].Value = 0
+			}
+		}
 	}
 
-	c.JSON(200, cell)
+	c.JSON(200, GetGameResponseDTO(game))
 }
