@@ -1,8 +1,10 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/alejoberardino/minesweeper/utils"
@@ -10,11 +12,15 @@ import (
 )
 
 const (
+	// States
 	CLICKED  = 1
 	UNKNOWN  = 0
 	POSSIBLE = -1
 	FLAGGED  = -2
-	MINE     = -1
+
+	// Special values
+	BLANK = 0
+	MINE  = -1
 )
 
 type Cell struct {
@@ -88,7 +94,7 @@ func BuildGame(rows int, columns int, mines int) Game {
 	return game
 }
 
-func (game *Game) calculateAdjacentScores(x int, y int) {
+func (game *Game) traverseAdjacent(x int, y int, f func(x int, y int)) {
 	log.Printf("Calculating adjacent Scores for (%d;%d)", x, y)
 	startRow := utils.Max(0, y-1)
 	endRow := utils.Min(y+1, game.Rows-1)
@@ -101,9 +107,53 @@ func (game *Game) calculateAdjacentScores(x int, y int) {
 			if i == y && j == x {
 				continue
 			}
-
-			log.Printf("Increasing score for (%d;%d)", j, i)
-			game.Cells[i][j].Value++
+			f(j, i)
 		}
 	}
+}
+
+func (game *Game) calculateAdjacentScores(x0 int, y0 int) {
+	log.Printf("Calculating adjacent Scores for (%d;%d)", x0, y0)
+
+	game.traverseAdjacent(x0, y0, func(x int, y int) {
+		log.Printf("Increasing score for (%d;%d)", x, y)
+		if game.Cells[y][x].Value != MINE {
+			game.Cells[y][x].Value++
+		}
+	})
+}
+
+func (game *Game) UncoverBlank(x0 int, y0 int) {
+	log.Printf("Uncovering blank area starting at (%d;%d)", x0, y0)
+	game.Cells[y0][x0].State = CLICKED // We have to do this first to have an escape from infinite recursion
+
+	game.traverseAdjacent(x0, y0, func(x int, y int) {
+		cell := &game.Cells[y][x]
+		if cell.Value == BLANK && cell.State != CLICKED {
+			log.Printf("Uncover (recurse) (%d;%d)", x, y)
+			game.UncoverBlank(x, y)
+		}
+	})
+}
+
+func (game *Game) UncoverAll() {
+	log.Print("Uncovering all cells")
+	for y := range game.Cells {
+		for x := range game.Cells[y] {
+			game.Cells[y][x].State = CLICKED
+		}
+	}
+}
+
+func (game *Game) PrintBoard() {
+	log.Print("Game board:")
+	var sb strings.Builder
+	sb.WriteString("\n")
+	for y := range game.Cells {
+		for x := range game.Cells[y] {
+			sb.WriteString(fmt.Sprintf("%2d ", game.Cells[y][x].Value))
+		}
+		sb.WriteString("\n")
+	}
+	log.Print(sb.String())
 }

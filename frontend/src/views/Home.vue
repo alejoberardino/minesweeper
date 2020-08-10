@@ -2,15 +2,15 @@
   <div class="home">
     <div>
       <label for="rows">Rows</label>
-      <input type="number" name="rows" v-model="dto.rows" />
+      <input type="number" name="rows" v-model.number="dto.rows" />
     </div>
     <div>
       <label for="columns">Columns</label>
-      <input type="number" name="columns" v-model="dto.columns" />
+      <input type="number" name="columns" v-model.number="dto.columns" />
     </div>
     <div>
       <label for="mines">Mines</label>
-      <input type="number" name="mines" v-model="dto.mines" />
+      <input type="number" name="mines" v-model.number="dto.mines" />
     </div>
     <button @click="start">Start game</button>
   </div>

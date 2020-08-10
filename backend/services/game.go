@@ -19,6 +19,7 @@ type GameService struct {
 func (service *GameService) Create(rows int, columns int, mines int) (primitive.ObjectID, error) {
 	game := model.BuildGame(rows, columns, mines)
 	log.Printf("Built game %v", game)
+	game.PrintBoard()
 
 	// Insert to database
 	result, err := service.Client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").InsertOne(service.Context, game)
@@ -46,10 +47,22 @@ func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int
 	if err != nil || game.Id == primitive.NilObjectID {
 		return game, err
 	}
-	log.Printf("Got game, cell: %v", game.Cells[y][x])
+	cell := &game.Cells[y][x]
+	log.Printf("Got game, cell: %v", cell)
 
 	log.Printf("Modifying local instance, setting state %d in cell (%d;%d)", state, x, y)
-	game.Cells[y][x].State = state
+	cell.State = state
+
+	if cell.State == model.CLICKED {
+		if cell.Value == model.MINE {
+			log.Print("Clicked on a mine, game over!")
+			game.Value = "over"
+			game.UncoverAll()
+		} else if cell.Value == model.BLANK {
+			log.Print("Clicked on a blank cell, need to traverse and uncover all neighboring blank cells")
+			game.UncoverBlank(x, y)
+		}
+	}
 
 	log.Print("Updating state in the db")
 	if result, err := service.Client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").UpdateOne(service.Context, bson.M{"_id": id}, bson.D{
