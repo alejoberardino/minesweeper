@@ -1,5 +1,5 @@
 import http, { BaseService } from './base'
-import { Matrix } from '@/utils/state'
+import { Matrix, State, Cell } from '@/utils/state'
 
 export const gameService = new (class GameService extends BaseService {
   path = '/games/'
@@ -11,6 +11,16 @@ export const gameService = new (class GameService extends BaseService {
 
   async get(id: string) {
     return (await http.get(this.path + id)).data
+  }
+
+  async click(id: string, x: number, y: number, state: State): Promise<Cell> {
+    return (
+      await http.post(this.path + id + '/click', {
+        x,
+        y,
+        state,
+      })
+    ).data
   }
 
   private makeEmptyMatrix(rows: number, columns: number): Matrix {

@@ -3,7 +3,6 @@ export enum State {
   UNKNOWN = 0,
   POSSIBLE = -1,
   FLAGGED = -2,
-  MINE = -1,
 }
 
 export interface Cell {
@@ -13,7 +12,7 @@ export interface Cell {
 export type Matrix = Cell[][]
 
 export interface Game {
-  id: number | null
+  id: string | null
   cells: Matrix
   columns: number
   rows: number

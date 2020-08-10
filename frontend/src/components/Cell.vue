@@ -1,8 +1,8 @@
 <template>
-  <div class="cell" @click="$emit('click')">
+  <div class="cell" @click="$emit('click')" @contextmenu.prevent="$emit('contextmenu')">
     <img v-if="state === State.FLAGGED" src="@/assets/flag-24px.svg" />
-    <img v-if="state === State.UNKNOWN" src="@/assets/help-24px.svg" />
-    {{ state > 0 ? state : '' }}
+    <img v-if="state === State.POSSIBLE" src="@/assets/help-24px.svg" />
+    {{ state > 0 ? value : '' }}
   </div>
 </template>
 

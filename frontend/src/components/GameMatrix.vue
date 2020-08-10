@@ -2,11 +2,13 @@
   <div class="container" :style="calculateMatrixStyle()">
     <template v-for="(rows, y) in matrix">
       <Cell
-        v-for="(state, x) in rows"
+        v-for="(cell, x) in rows"
         :key="`${x};${y}`"
         :style="calculateCellStyle(x, y)"
-        :state="state"
+        :state="cell.state"
+        :value="cell.value"
         @click="$emit('cell-clicked', { x, y })"
+        @contextmenu="$emit('cell-right-clicked', { x, y })"
       />
     </template>
   </div>
