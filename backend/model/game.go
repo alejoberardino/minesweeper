@@ -149,6 +149,19 @@ func (game *Game) UncoverAll() {
 	}
 }
 
+func (game *Game) CheckWin() bool {
+	log.Print("Uncovering all cells")
+	for y := range game.Cells {
+		for x := range game.Cells[y] {
+			cell := game.Cells[y][x]
+			if cell.Value == MINE && cell.State != FLAGGED || cell.Value != MINE && cell.State != CLICKED {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func (game *Game) PrintBoard() {
 	log.Print("Game board:")
 	var sb strings.Builder

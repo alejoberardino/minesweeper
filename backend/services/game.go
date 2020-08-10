@@ -52,6 +52,7 @@ func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int
 
 	log.Printf("Modifying local instance, setting state %d in cell (%d;%d)", state, x, y)
 	cell.State = state
+	game.Value = "in_progress"
 
 	if cell.State == model.CLICKED {
 		if cell.Value == model.MINE {
@@ -61,6 +62,9 @@ func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int
 		} else if cell.Value == model.BLANK {
 			log.Print("Clicked on a blank cell, need to traverse and uncover all neighboring blank cells")
 			game.UncoverBlank(x, y)
+		} else if game.CheckWin() {
+			log.Print("All mines were sweeped! Congrats!")
+			game.Value = "complete"
 		}
 	}
 

@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <button @click="restart">Restart</button>
+    <div>
+      <button @click="$router.push('/')">Go home</button>
+      <button @click="restart">Restart</button>
+    </div>
     <GameMatrix :id="game.id" :matrix="game.cells" @cell-clicked="cellClicked" @cell-right-clicked="cellRightClicked" />
   </div>
 </template>
