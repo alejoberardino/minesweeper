@@ -15,8 +15,8 @@ const (
 	// States
 	CLICKED  = 1
 	UNKNOWN  = 0
-	POSSIBLE = -1
-	FLAGGED  = -2
+	FLAGGED  = -1
+	POSSIBLE = -2
 
 	// Special values
 	BLANK = 0
@@ -129,10 +129,14 @@ func (game *Game) UncoverBlank(x0 int, y0 int) {
 
 	game.traverseAdjacent(x0, y0, func(x int, y int) {
 		cell := &game.Cells[y][x]
+
+		// We want only orthogonal matches here
 		if cell.Value == BLANK && cell.State != CLICKED {
 			log.Printf("Uncover (recurse) (%d;%d)", x, y)
 			game.UncoverBlank(x, y)
 		}
+
+		cell.State = CLICKED
 	})
 }
 

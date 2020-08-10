@@ -1,8 +1,8 @@
 export enum State {
   CLICKED = 1,
   UNKNOWN = 0,
-  POSSIBLE = -1,
-  FLAGGED = -2,
+  FLAGGED = -1,
+  POSSIBLE = -2,
 }
 
 export interface Cell {
