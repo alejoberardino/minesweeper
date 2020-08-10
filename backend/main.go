@@ -35,8 +35,9 @@ func main() {
 	}
 	games := r.Group("/games")
 	{
-		games.GET("/:id", gameController.Get)
 		games.POST("/", gameController.Create)
+		games.GET("/:id", gameController.Get)
+		games.POST("/:id/click", gameController.Click)
 	}
 
 	// Declarative swagger info

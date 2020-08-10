@@ -1,7 +1,13 @@
 <template>
   <div class="container" :style="calculateMatrixStyle()">
-    <template v-for="(rows, i) in matrix">
-      <Cell v-for="(state, j) in rows" :key="`${i};${j}`" :style="calculateCellStyle(i, j)" :state="state" />
+    <template v-for="(rows, y) in matrix">
+      <Cell
+        v-for="(state, x) in rows"
+        :key="`${x};${y}`"
+        :style="calculateCellStyle(x, y)"
+        :state="state"
+        @click="$emit('cell-clicked', { x, y })"
+      />
     </template>
   </div>
 </template>
@@ -21,26 +27,19 @@ export default class GameMatrix extends Vue {
   @Prop() private id!: number
   @Prop() private matrix!: State[][]
 
-  created() {
-    if (!this.id) {
-      // this.matrix = gameService.create()
-    }
-  }
-
   calculateMatrixStyle() {
-    console.log(this.matrix)
     return {
-      'grid-template-rows': `repeat(${this.matrix.length}, 5vw)`,
-      'grid-template-columns': `repeat(${this.matrix[0].length}, 5vw)`,
+      'grid-template-rows': `repeat(${this.matrix.length}, 7vw)`,
+      'grid-template-columns': `repeat(${this.matrix[0].length}, 7vw)`,
     }
   }
 
-  calculateCellStyle(i: number, j: number) {
+  calculateCellStyle(x: number, y: number) {
     return {
-      'border-top-width': i === 0 ? '4px' : '1px',
-      'border-left-width': j === 0 ? '4px' : '1px',
-      'border-right-width': j === this.matrix[0].length - 1 ? '4px' : '1px',
-      'border-bottom-width': i === this.matrix.length - 1 ? '4px' : '1px',
+      'border-top-width': y === 0 ? '4px' : '1px',
+      'border-left-width': x === 0 ? '4px' : '1px',
+      'border-right-width': x === this.matrix[0].length - 1 ? '4px' : '1px',
+      'border-bottom-width': y === this.matrix.length - 1 ? '4px' : '1px',
     }
   }
 }

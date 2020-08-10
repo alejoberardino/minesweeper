@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <GameMatrix :id="game.id" :matrix="game.cells" />
+    <GameMatrix :id="game.id" :matrix="game.cells" @cell-clicked="cellClicked" />
   </div>
 </template>
 
@@ -27,13 +27,11 @@ export default class GameView extends Vue {
   }
 
   async created() {
-    console.log(this.game)
     this.game = await gameService.get(this.$route.params.id)
   }
 
-  // beforeRouteUpdate(to: any, from: any, next: any) {
-  //   console.log(this.$route.params)
-  //   next()
-  // }
+  cellClicked({ x, y }: { x: number; y: number }) {
+    console.log(`Cell clicked at (${x};${y})`)
+  }
 }
 </script>

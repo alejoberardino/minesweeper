@@ -33,8 +33,38 @@ func (service *GameService) Create(rows int, columns int, mines int) (primitive.
 func (service *GameService) Get(id primitive.ObjectID) (model.Game, error) {
 	var game model.Game
 
-	// Get from the database
+	log.Print("Geting game from the database")
 	err := service.Client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").FindOne(service.Context, bson.M{"_id": id}).Decode(&game)
 
 	return game, err
+}
+
+func (service *GameService) Click(id primitive.ObjectID, x int, y int, state int) (model.Cell, error) {
+	var cell model.Cell
+	// TODO: This is very inefficient, but mongo deep queries require aggregation & projections,
+	// and the mongo-go-driver isn't super documented. I'll leave it for later.
+	game, err := service.Get(id)
+	if err != nil || game.Id == primitive.NilObjectID {
+		return cell, err
+	}
+	log.Printf("Got game, cell: %v", game.Cells[y][x])
+
+	log.Printf("Modifying local instance, setting state %d in cell (%d;%d)", state, x, y)
+	game.Cells[y][x].State = state
+
+	log.Print("Updating state in the db")
+	if result, err := service.Client.Database(os.Getenv("MONGO_DATABASE")).Collection("games").UpdateOne(service.Context, bson.M{"_id": id}, bson.D{
+		{
+			"$set", bson.D{
+				{
+					"cells", game.Cells,
+				},
+			},
+		},
+	}); err != nil || result.ModifiedCount > 1 {
+		return cell, err
+	}
+
+	log.Print("Update successful")
+	return game.Cells[y][x], err
 }

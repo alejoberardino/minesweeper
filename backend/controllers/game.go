@@ -27,7 +27,7 @@ type CreateGameResponseDTO struct {
 }
 
 // Create game godoc
-// @Summary Create game endpoint
+// @Summary Create game
 // @Description Create a new game
 // @Produce  json
 // @Param dto body CreateGameRequestDTO true "Details for the new game"
@@ -68,7 +68,7 @@ type GetGameResponseDTO struct {
 }
 
 // Get game godoc
-// @Summary Get game endpoint
+// @Summary Get game
 // @Description Gets an existing game from the db
 // @Produce  json
 // @Param id path string true "Id of the game to get"
@@ -109,4 +109,57 @@ func (controller *GameController) Get(c *gin.Context) {
 		}
 		c.JSON(200, GetGameResponseDTO(game))
 	}
+}
+
+type ClickGameCellRequestDTO struct {
+	X     int `json:"x" example:"2"`
+	Y     int `json:"y" example:"3"`
+	State int `json:"state" example:"1"`
+}
+
+// Click game cell godoc
+// @Summary Click game cell
+// @Description Clicks a specific cell
+// @Produce  json
+// @Param id path string true "Id of the game to work with"
+// @Param dto body ClickGameCellRequestDTO true "Which cell was clicked, and to what state"
+// @Success 200 {object} model.Cell
+// @Router /games/{id}/click [post]
+func (controller *GameController) Click(c *gin.Context) {
+	var dto ClickGameCellRequestDTO
+	id := c.Param("id")
+
+	// TODO: Come back to this
+	// if id == nil {
+	// 	log.Print("Id was not present in the request")
+	// 	c.JSON(http.StatusBadRequest, gin.H{"msg": "Id was not present in the request"})
+	// 	return
+	// }
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Print("The provided id was invalid")
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "The provided id was invalid"})
+		return
+	}
+
+	// Parse dto
+	// TODO: Replace should bind with bind
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+		return
+	}
+
+	cell, err := controller.GameService.Click(objectId, dto.X, dto.Y, dto.State)
+	if err != nil {
+		log.Printf("Could not create game: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
+		return
+	}
+
+	if dto.State != model.CLICKED {
+		cell.Value = model.UNKNOWN
+	}
+
+	c.JSON(200, cell)
 }

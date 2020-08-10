@@ -1,5 +1,5 @@
 <template>
-  <div class="cell">
+  <div class="cell" @click="$emit('click')">
     <img v-if="state === State.FLAGGED" src="@/assets/flag-24px.svg" />
     <img v-if="state === State.UNKNOWN" src="@/assets/help-24px.svg" />
     {{ state > 0 ? state : '' }}
