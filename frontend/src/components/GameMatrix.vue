@@ -38,10 +38,10 @@ export default class GameMatrix extends Vue {
 
   calculateCellStyle(x: number, y: number) {
     return {
-      'border-top-width': y === 0 ? '4px' : '1px',
-      'border-left-width': x === 0 ? '4px' : '1px',
-      'border-right-width': x === this.matrix[0].length - 1 ? '4px' : '1px',
-      'border-bottom-width': y === this.matrix.length - 1 ? '4px' : '1px',
+      'border-top-width': y === 0 ? '4px' : '2px',
+      'border-left-width': x === 0 ? '4px' : '2px',
+      'border-right-width': x === this.matrix[0].length - 1 ? '4px' : '2px',
+      'border-bottom-width': y === this.matrix.length - 1 ? '4px' : '2px',
     }
   }
 }
@@ -53,7 +53,7 @@ div.container {
   display: grid;
   justify-content: center;
   align-content: center;
-  grid-gap: 0rem;
+  grid-gap: 1px;
   list-style: none;
   margin: 0 0 2vw;
   padding: 0;

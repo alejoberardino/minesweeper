@@ -1,5 +1,5 @@
 <template>
-  <div class="cell" @click="$emit('click')" @contextmenu.prevent="$emit('contextmenu')">
+  <div class="cell" @click="$emit('click')" @contextmenu.prevent="$emit('contextmenu')" :style="cellStyle">
     <img v-if="state === State.FLAGGED" src="@/assets/flag-24px.svg" />
     <img v-if="state === State.POSSIBLE" src="@/assets/help-24px.svg" />
     {{ state > 0 ? value : '' }}
@@ -15,6 +15,12 @@ export default class Cell extends Vue {
   @Prop() private state!: State
   @Prop() private value!: number
   State = State
+
+  get cellStyle() {
+    return {
+      border: `3px ${this.state === State.CLICKED ? 'inset' : 'outset'}`,
+    }
+  }
 
   get imageSrc() {
     switch (this.state) {
@@ -35,7 +41,6 @@ div.cell {
   margin: 0;
   padding: 0;
   text-align: center;
-  border: 1px solid black;
   display: flex;
   align-items: center;
   justify-content: center;
