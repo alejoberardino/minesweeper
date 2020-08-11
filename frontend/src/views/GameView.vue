@@ -50,10 +50,10 @@ export default class GameView extends Vue {
   }
 
   async cellClicked({ x, y }: { x: number; y: number }, state = State.CLICKED) {
-    console.log(`Cell clicked at (${x};${y})`)
+    // console.log(`Cell clicked at (${x};${y})`)
     const currentState = this.game.cells[y][x].state
     if (currentState === State.CLICKED) {
-      console.log('Cell already clicked')
+      // console.log('Cell already clicked')
       return
     }
     // Assume always left click
@@ -68,7 +68,7 @@ export default class GameView extends Vue {
   cellRightClicked({ x, y }: { x: number; y: number }) {
     const currentState = this.game.cells[y][x].state
     const nextState = this.getNextState(currentState)
-    console.log(`Current state = ${currentState}, setting to ${nextState}`)
+    // console.log(`Current state = ${currentState}, setting to ${nextState}`)
     return this.cellClicked({ x, y }, nextState)
   }
 

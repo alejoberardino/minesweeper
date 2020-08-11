@@ -16,7 +16,8 @@ import (
 
 func main() {
 	// Create new Gin REST API
-	r := gin.Default()
+	router := gin.Default()
+	r := router.Group("/api")
 
 	// Configure CORS
 	r.Use(cors.Default())
@@ -52,5 +53,5 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Run the api
-	r.Run()
+	router.Run(":80")
 }
