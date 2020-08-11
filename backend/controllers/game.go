@@ -123,7 +123,7 @@ type ClickGameCellRequestDTO struct {
 // @Produce  json
 // @Param id path string true "Id of the game to work with"
 // @Param dto body ClickGameCellRequestDTO true "Which cell was clicked, and to what state"
-// @Success 200 {object} model.GetGameResponseDTO
+// @Success 200 {object} GetGameResponseDTO
 // @Router /games/{id}/click [post]
 func (controller *GameController) Click(c *gin.Context) {
 	var dto ClickGameCellRequestDTO
