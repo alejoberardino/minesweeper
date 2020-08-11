@@ -7,5 +7,5 @@ COPY . .
 # TODO: This is not optmized, at all
 RUN ./scripts/setup.sh 
 
-CMD ["gin", "minesweeper"]
+CMD ["gin", "minesweeper", "--port 80"]
 
