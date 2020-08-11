@@ -17,7 +17,8 @@ services:
         ports:
             - "8080:$CLIENT_PORT"
         volumes:
-            - ./frontend:/usr/src/app
+            - ./frontend/src:/usr/src/app/src
+            - ./frontend/public:/usr/src/app/public
         env_file:
             - .env
 
